@@ -20,6 +20,29 @@ document.addEventListener('DOMContentLoaded', () => {
         FAMILY: ['spouse', 'dependents']
     };
 
+    const FEATURES = {
+        [TIERS.ESSENTIAL]: [
+            "Simple T4 Income",
+            "RRSP & Donations",
+            "Student Credits",
+            "Max Refund Guarantee"
+        ],
+        [TIERS.SMART_PLUS]: [
+            "All Essential Features",
+            "Audit Defence included",
+            "Investment Income (T3/T5008)",
+            "Priority Support",
+            "7-Year Cloud Storage"
+        ],
+        [TIERS.PRO]: [
+            "All Smart Plus Features",
+            "Self-Employment Income (T2125)",
+            "Rental Income (T776)",
+            "Unlimited Business Expenses",
+            "GST/HST Return Filing"
+        ]
+    };
+
     // Preference Mapping: Defaults to start with
     const PREF_MAPPING = {
         'myself': TIERS.ESSENTIAL,
@@ -39,6 +62,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const stepIndicators = document.querySelectorAll('.step-indicator');
     const nextBtns = document.querySelectorAll('.next-btn');
     const backBtns = document.querySelectorAll('.back-btn');
+    const startOverBtn = document.getElementById('start-over-btn');
+
+    // Result Elements
+    const priceExplainer = document.getElementById('price-explainer');
+    const reasoningText = document.getElementById('reasoning-text');
+    const featureListUl = document.getElementById('feature-list-ul');
 
     // Result Cards
     const cards = {
@@ -112,6 +141,29 @@ document.addEventListener('DOMContentLoaded', () => {
             if (indStep == stepNum) ind.classList.add('active');
             else if (indStep > stepNum) ind.classList.remove('active');
         });
+
+        // Show/Hide Start Over Button
+        if (stepNum > 1) {
+            startOverBtn.classList.remove('hidden');
+        } else {
+            startOverBtn.classList.add('hidden');
+        }
+    }
+
+    // --- Start Over Logic ---
+    if (startOverBtn) {
+        startOverBtn.addEventListener('click', () => {
+            // Reset State
+            selectedChips.clear();
+            currentPreference = 'unsure';
+
+            // Reset UI
+            chips.forEach(c => c.classList.remove('selected'));
+            prefCards.forEach(c => c.classList.remove('selected'));
+
+            updatePricing();
+            goToStep(1);
+        });
     }
 
     // --- 4. Pricing Calculation Logic ---
@@ -139,6 +191,46 @@ document.addEventListener('DOMContentLoaded', () => {
             activeTierId = situationTier;
         }
 
+        // --- NEW: Generate Reasoning Text ---
+        // Basic heuristic for explanation
+        let reason = "Recommended based on your selection.";
+
+        if (activeTierId === TIERS.PRO) {
+            if (hasPro) {
+                const proItems = Array.from(selectedChips).filter(val => CATEGORIES.PRO.includes(val));
+                const formatList = proItems.map(i => i.replace(/_/g, ' ')).join(', ');
+                reason = `Recommended because you selected: <br><strong>${formatList}</strong>`;
+            } else if (baseTier === TIERS.PRO) {
+                reason = "Recommended because you chose 'I want someone to do it for me'.";
+            }
+        } else if (activeTierId === TIERS.SMART_PLUS) {
+            if (hasModerate) {
+                const modItems = Array.from(selectedChips).filter(val => CATEGORIES.MODERATE.includes(val));
+                // Only show first 2 to keep it short if too many
+                const formatList = modItems.slice(0, 3).map(i => i.replace(/_/g, ' ')).join(', ');
+                reason = `Recommended because you have: <br><strong>${formatList}</strong>`;
+            } else if (baseTier === TIERS.SMART_PLUS) {
+                reason = "Recommended because you chose 'I want an expert to help'.";
+            }
+        } else {
+            reason = "The best value for simple returns.";
+        }
+
+        // Update DOM
+        if (priceExplainer) {
+            reasoningText.innerHTML = reason;
+            if (currentPreference !== 'unsure' || selectedChips.size > 0) {
+                priceExplainer.classList.remove('hidden');
+            } else {
+                priceExplainer.classList.add('hidden');
+            }
+        }
+
+        // --- NEW: Update Feature List ---
+        if (featureListUl && FEATURES[activeTierId]) {
+            featureListUl.innerHTML = FEATURES[activeTierId].map(feat => `<li>✔ ${feat}</li>`).join('');
+        }
+
         // Update UI Cards
         Object.keys(cards).forEach(key => {
             const card = cards[key];
@@ -152,13 +244,116 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Family Pack Visibility
-        // Show if Family chips selected, UNLESS we are already at max tier? 
-        // Logic: Family pack add-on is for paying for spouse. Usually applies to Smart+/Pro.
-        // We show it if family triggers exist.
         if (hasFamily) {
             familyAlert.classList.remove('hidden');
         } else {
             familyAlert.classList.add('hidden');
         }
+    }
+
+    // Initialize with default
+    updatePricing();
+
+    // --- 5. Global Scroll Animations (IntersectionObserver) ---
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('in-view');
+                observer.unobserve(entry.target); // Trigger once
+            }
+        });
+    }, observerOptions);
+
+    document.querySelectorAll('.animate-on-scroll').forEach(el => {
+        observer.observe(el);
+    });
+
+    // --- 6. FAQ Accordion Logic ---
+    document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const item = btn.parentElement;
+            // Toggle current
+            item.classList.toggle('active');
+        });
+    });
+
+    // --- 7. Stacking Cards Scroll Effect ---
+    // Simple logic: As we scroll through the testimonials section, the cards pop up
+    const testimonialsSection = document.querySelector('.testimonials-section');
+    const stackCards = document.querySelectorAll('.stack-card');
+
+    if (testimonialsSection && stackCards.length > 0) {
+        window.addEventListener('scroll', () => {
+            const rect = testimonialsSection.getBoundingClientRect();
+            const sectionHeight = testimonialsSection.offsetHeight;
+            const scrollProgress = -rect.top / (sectionHeight - window.innerHeight);
+            // 0 at top entrance, 1 at bottom exit roughly
+
+            if (scrollProgress < 0 || scrollProgress > 1.2) return;
+
+            // Logic to cycle cards based on progress
+            // 0-0.33: Card 1 front
+            // 0.33-0.66: Card 2 front
+            // 0.66-1.0: Card 3 front
+
+            // This is a simple visual swap implementation
+            if (scrollProgress > 0.66) {
+                // Card 3 Active
+                setActiveCard(2);
+            } else if (scrollProgress > 0.33) {
+                // Card 2 Active
+                setActiveCard(1);
+            } else {
+                // Card 1 Active
+                setActiveCard(0);
+            }
+        });
+
+        function setActiveCard(index) {
+            stackCards.forEach((card, i) => {
+                if (i === index) {
+                    card.style.transform = "scale(1) translateY(0)";
+                    card.style.opacity = "1";
+                    card.style.zIndex = "10";
+                } else if (i < index) {
+                    // Cards already passed - move up and fade
+                    card.style.transform = "scale(0.9) translateY(-50px)";
+                    card.style.opacity = "0";
+                    card.style.zIndex = "1";
+                } else {
+                    // Cards coming up - waiting in back
+                    card.style.transform = `scale(${0.9 - (i - index) * 0.05}) translateY(${40 + (i - index) * 20}px)`;
+                    card.style.opacity = "0.8"; // peek
+                    card.style.zIndex = 5 - i;
+                }
+            });
+        }
+    }
+
+    // --- 8. Comparison Modal Logic ---
+    const compareBtn = document.getElementById('compare-plans-btn');
+    const compareModal = document.getElementById('compare-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+
+    if (compareBtn && compareModal && closeModalBtn) {
+        compareBtn.addEventListener('click', () => {
+            compareModal.classList.remove('hidden');
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            compareModal.classList.add('hidden');
+        });
+
+        // Close on click outside
+        compareModal.addEventListener('click', (e) => {
+            if (e.target === compareModal) {
+                compareModal.classList.add('hidden');
+            }
+        });
     }
 });

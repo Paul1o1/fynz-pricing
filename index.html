@@ -29,6 +29,7 @@
                     <div class="step-indicator" data-step="2">2. Personal Situation</div>
                     <div class="step-indicator" data-step="3">3. Work & Business</div>
                 </div>
+                <button id="start-over-btn" class="text-link-btn hidden">Start Over ↺</button>
             </div>
 
             <!-- Step 1: Preference -->
@@ -57,6 +58,22 @@
 
                 <div class="step-actions">
                     <button class="nav-btn next-btn" data-next="2">Next: Personal Details &rarr;</button>
+                </div>
+
+                <!-- Trust Signals -->
+                <div class="trust-signals">
+                    <div class="trust-badge">
+                        <span class="badge-icon">🔒</span>
+                        <span>Bank-level security</span>
+                    </div>
+                    <div class="trust-badge">
+                        <span class="badge-icon">✅</span>
+                        <span>CRA Netfile Certified</span>
+                    </div>
+                    <div class="trust-badge">
+                        <span class="badge-icon">💰</span>
+                        <span>Max Refund Guarantee</span>
+                    </div>
                 </div>
             </div>
 
@@ -169,14 +186,340 @@
                     </div>
                 </div>
 
+                <!-- Why This Price Context -->
+                <div id="price-explainer" class="price-reasoning hidden">
+                    <p class="reasoning-title">Why this plan?</p>
+                    <p id="reasoning-text" class="reasoning-text">Because you selected...</p>
+                </div>
+
+                <!-- Dynamic Feature List -->
+                <div class="dynamic-features">
+                    <h4>What's included:</h4>
+                    <ul id="feature-list-ul">
+                        <!-- Populated by JS -->
+                        <li>✔ Max Refund Guarantee</li>
+                        <li>✔ Auto-fill my return</li>
+                    </ul>
+                </div>
+
                 <div class="final-action-container">
                     <button class="cta-button primary">Get Started</button>
+                    <button class="text-link-btn small" id="compare-plans-btn">Compare all plans</button>
                 </div>
 
             </div>
         </aside>
 
     </main>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works-pricing animate-on-scroll">
+        <div class="section-header">
+            <h2>3 Simple steps to file</h2>
+            <p>Our guided process makes taxes painless.</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-icon">1</div>
+                <h3>Profile</h3>
+                <p>Answer a few questions about your life and work.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon">2</div>
+                <h3>Upload</h3>
+                <p>Snap photos or import your tax slips directly.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon">3</div>
+                <h3>File</h3>
+                <p>Review and Netfile to the CRA in one click.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Static Pricing Grid Section -->
+    <section id="all-plans" class="pricing-grid-section animate-on-scroll">
+        <div class="section-header">
+            <h2>Choose the plan that fits you</h2>
+            <p>Simple, transparent pricing for every situation.</p>
+        </div>
+        <div class="pricing-cards-grid">
+            <div class="static-card">
+                <h3>Essential</h3>
+                <div class="price">$50 <span>/return</span></div>
+                <ul class="card-features">
+                    <li>✔ T4 Employment Income</li>
+                    <li>✔ Student Credits</li>
+                    <li>✔ RRSP & Donations</li>
+                    <li>-</li>
+                    <li>-</li>
+                </ul>
+                <button class="cta-button">Select Essential</button>
+            </div>
+            <div class="static-card highlighted">
+                <div class="card-badge">Recommended</div>
+                <h3>Smart Plus</h3>
+                <div class="price">$80 <span>/return</span></div>
+                <ul class="card-features">
+                    <li>✔ All Essential Features</li>
+                    <li>✔ Investment Income</li>
+                    <li>✔ Audit Defence</li>
+                    <li>✔ Expert Review</li>
+                    <li>-</li>
+                </ul>
+                <button class="cta-button primary">Select Smart Plus</button>
+            </div>
+            <div class="static-card">
+                <h3>Pro</h3>
+                <div class="price">$150 <span>/return</span></div>
+                <ul class="card-features">
+                    <li>✔ All Smart Plus Features</li>
+                    <li>✔ Self-Employment</li>
+                    <li>✔ Rental Income</li>
+                    <li>✔ GST/HST Returns</li>
+                    <li>✔ Priority Support</li>
+                </ul>
+                <button class="cta-button">Select Pro</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- On-Page Detailed Comparison -->
+    <section class="on-page-comparison animate-on-scroll">
+        <div class="section-header">
+            <h2>Compare every detail</h2>
+            <p>A complete breakdown of all plan features.</p>
+        </div>
+        <div class="comparison-container">
+            <table class="full-compare-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Essential</th>
+                        <th>Smart Plus</th>
+                        <th>Pro</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-group-header">
+                        <td colspan="4">Tax Forms & Income</td>
+                    </tr>
+                    <tr>
+                        <td>T4 Employment Income</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                    </tr>
+                    <tr>
+                        <td>Student Credits</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                    </tr>
+                    <tr>
+                        <td>Investments (T5, T3)</td>
+                        <td>-</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                    </tr>
+                    <tr>
+                        <td>Self-Employed (T2125)</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>✔</td>
+                    </tr>
+
+                    <tr class="table-group-header">
+                        <td colspan="4">Support & Protection</td>
+                    </tr>
+                    <tr>
+                        <td>Max Refund Guarantee</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                    </tr>
+                    <tr>
+                        <td>Audit Defence</td>
+                        <td>-</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                    </tr>
+                    <tr>
+                        <td>Expert Review</td>
+                        <td>-</td>
+                        <td>✔</td>
+                        <td>✔</td>
+                    </tr>
+                    <tr>
+                        <td>Priority Support</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>✔</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-pricing animate-on-scroll">
+        <div class="section-header">
+            <h2>What our users say</h2>
+        </div>
+        <div class="testimonials-grid">
+            <div class="testimonial-box">
+                <div class="stars">★★★★★</div>
+                <p>"The pricing wizard found gaps in my tax return that saved me hundreds. Best $80 I've spent!"</p>
+                <div class="author">- Michael S., Freelance Designer</div>
+            </div>
+            <div class="testimonial-box">
+                <div class="stars">★★★★★</div>
+                <p>"Filing with Fyn IQ was actually enjoyable. The Smart Plus plan handles my investments perfectly."
+                </p>
+                <div class="author">- Sarah G., Tech Lead</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section-pricing animate-on-scroll">
+        <h2>Pricing & Plans FAQ</h2>
+        <div class="faq-accordion">
+            <div class="faq-item">
+                <button class="faq-question">
+                    Is the Essential plan really enough for me?
+                    <span class="toggle-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>If you have a simple T4, some RRSP contributions, and standard credits, Essential is perfect. Our
+                        wizard will tell you if you need to upgrade based on your specific slips.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    What if I start with one plan and need more?
+                    <span class="toggle-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>No problem! You can start for free and we'll only ask you to pay when you're ready to file. If
+                        your situation gets complex, your plan will adjust automatically.</p>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-question">
+                    Is my data safe?
+                    <span class="toggle-icon">+</span>
+                </button>
+                <div class="faq-answer">
+                    <p>Absolutely. We use 256-bit encryption (bank-level security) and we are fully Netfile certified by
+                        the CRA.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <h4>Fyn IQ</h4>
+                <p>The smartest way to file your taxes. Simple, fast, and guaranteed to get you the max refund.</p>
+            </div>
+            <div class="footer-links">
+                <div class="link-group">
+                    <h5>Company</h5>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Security</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h5>Support</h5>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Status</a></li>
+                    </ul>
+                </div>
+                <div class="link-group">
+                    <h5>Legal</h5>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Accessibility</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 Fyn IQ. All rights reserved.
+        </div>
+    </footer>
+
+
+    <!-- Comparison Modal -->
+    <div id="compare-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="close-modal-btn" class="close-btn">&times;</button>
+            <h2>Compare Plans</h2>
+            <div class="compare-table-wrapper">
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Essential ($50)</th>
+                            <th>Smart Plus ($80)</th>
+                            <th>Pro ($150)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>T4 Employment Income</td>
+                            <td class="check">✔</td>
+                            <td class="check">✔</td>
+                            <td class="check">✔</td>
+                        </tr>
+                        <tr>
+                            <td>Student Credits</td>
+                            <td class="check">✔</td>
+                            <td class="check">✔</td>
+                            <td class="check">✔</td>
+                        </tr>
+                        <tr>
+                            <td>RRSP & Donations</td>
+                            <td class="check">✔</td>
+                            <td class="check">✔</td>
+                            <td class="check">✔</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>Audit Defence</td>
+                            <td>-</td>
+                            <td class="check">✔</td>
+                            <td class="check">✔</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>Investment Income</td>
+                            <td>-</td>
+                            <td class="check">✔</td>
+                            <td class="check">✔</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>Self-Employment</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td class="check">✔</td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td>GST/HST Returns</td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td class="check">✔</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
